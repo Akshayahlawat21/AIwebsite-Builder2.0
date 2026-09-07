@@ -11,8 +11,8 @@ import Pricing from './pages/Pricing'
 
 import axios from 'axios';
 
-// Use Vercel environment variable, fallback to the existing Render production URL
-export const serverUrl = import.meta.env.VITE_SERVER_URL || "https://aiwebsite-builder.onrender.com";
+// In local development, default to local backend on port 8000; in production use VITE_SERVER_URL or Render URL
+export const serverUrl = import.meta.env.VITE_SERVER_URL || (import.meta.env.DEV ? "http://localhost:8000" : "https://aiwebsite-builder.onrender.com");
 
 // Global interceptor: automatically add localStorage token to all API requests
 axios.interceptors.request.use((config) => {
