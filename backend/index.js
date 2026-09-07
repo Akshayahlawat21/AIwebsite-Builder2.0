@@ -24,15 +24,17 @@ app.post(
   express.raw({ type: "application/json" }),
   stripeWebhook
 );
-app.use(express.json())
-app.use(cookieParser())
 app.use(cors({
     origin: function(origin, callback) {
-        // Reflect the request origin
-        callback(null, true);
+        if (!origin) return callback(null, true);
+        return callback(null, origin);
     },
-    credentials:true
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Cookie"]
 }))
+app.use(express.json())
+app.use(cookieParser())
 app.use("/api/auth",authRouter)
 app.use("/api/user",userRouter)
 app.use("/api/website",websiteRouter)
