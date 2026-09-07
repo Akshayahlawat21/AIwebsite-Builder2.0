@@ -171,7 +171,7 @@ function WebsiteEditor() {
 
                 </div>
 
-                <iframe ref={iframeRef} sandbox='allow-scripts allow-same-origin allow-forms' className='flex-1 w-full bg-white' />
+                <iframe ref={iframeRef} sandbox='allow-scripts allow-same-origin allow-forms allow-modals' className='flex-1 w-full bg-white' />
             </div>
 
             <AnimatePresence>
@@ -257,7 +257,7 @@ function WebsiteEditor() {
                     <motion.div
                         className="fixed inset-0 z-[9999] bg-black"
                     >
-                        <iframe className='w-full h-full bg-white' srcDoc={code} sandbox='allow-scripts allow-same-origin allow-forms'/>
+                        <iframe className='w-full h-full bg-white' srcDoc={code} sandbox='allow-scripts allow-same-origin allow-forms allow-modals'/>
                         <button onClick={() => setShowFullPreview(false)} className='absolute top-4 right-4 p-2 bg-black/70 rounded-lg'><X /></button>
                     </motion.div>
                 )}
