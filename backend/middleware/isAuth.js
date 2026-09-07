@@ -3,10 +3,12 @@ import User from "../models/user.model.js";
 
 const isAuth = async (req, res, next) => {
     try {
-        let token = req.cookies.token;
+        let token = null;
 
-        if (!token && req.headers.authorization) {
+        if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
             token = req.headers.authorization.split(" ")[1];
+        } else if (req.cookies && req.cookies.token) {
+            token = req.cookies.token;
         }
 
         if (!token) {

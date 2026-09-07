@@ -31,14 +31,16 @@ function useGetCurrentUser() {
                     headers: getAuthHeaders()
                 });
 
-                if (result.data && result.data._id) {
-                    console.log("useGetCurrentUser: Session Alive.");
+                // Crucial check: verify that the backend session matches the current Firebase user!
+                if (result.data && result.data._id && result.data.email === firebaseUser.email) {
+                    console.log("useGetCurrentUser: Session Alive for:", result.data.email);
                     dispatch(setUserData(result.data));
                 } else {
-                    throw new Error("Invalid session");
+                    console.log("useGetCurrentUser: Session email mismatch or invalid. Creating new session...");
+                    throw new Error("Session mismatch");
                 }
             } catch (error) {
-                console.log("useGetCurrentUser: Session failed/missing. Creating new...");
+                console.log("useGetCurrentUser: Syncing backend for:", firebaseUser.email);
                 try {
                     const { data } = await axios.post(`${serverUrl}/api/auth/google`, {
                         name: firebaseUser.displayName,

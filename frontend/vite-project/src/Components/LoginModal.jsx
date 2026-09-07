@@ -3,18 +3,44 @@ import { AnimatePresence, motion } from "motion/react";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../firebase";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/userSlice";
+import { serverUrl } from "../App";
+import axios from "axios";
 
 function LoginModal({ open, onClose }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
   const handleGoogleAuth = async () => {
     try {
       setLoading(true);
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      if (result?.user) {
+        try {
+          const { data } = await axios.post(
+            `${serverUrl}/api/auth/google`,
+            {
+              name: result.user.displayName,
+              email: result.user.email,
+              avatar: result.user.photoURL,
+            },
+            { withCredentials: true }
+          );
+
+          if (data.token) {
+            localStorage.setItem("token", data.token);
+          }
+          dispatch(setUserData(data));
+        } catch (backendErr) {
+          console.error("Backend auth error during login:", backendErr);
+        }
+      }
       onClose();
     } catch (error) {
       console.error("Popup Auth Error:", error);
+    } finally {
       setLoading(false);
     }
   };

@@ -21,7 +21,8 @@ try {
         httpOnly:true,
         secure: isProduction,          // true on Render (HTTPS), false on localhost
         sameSite: isProduction ? "none" : "strict", // "none" required for cross-domain
-        maxAge:7*24*60*60*1000
+        maxAge:7*24*60*60*1000,
+        path: "/"
     })
 
     // Also return token in body so frontend can store in localStorage
@@ -39,7 +40,8 @@ try {
      res.clearCookie("token",{
         httpOnly:true,
         secure: isProduction,
-        sameSite: isProduction ? "none" : "strict"
+        sameSite: isProduction ? "none" : "strict",
+        path: "/"
     })
 
     return res.status(200).json({message :"log out successfully"})

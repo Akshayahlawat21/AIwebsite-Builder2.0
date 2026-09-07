@@ -7,6 +7,9 @@ import { serverUrl } from '../App'
 import axios from 'axios'
 import { setUserData } from '../redux/userSlice'
 import { useNavigate } from 'react-router-dom'
+import { auth } from '../firebase'
+import { signOut } from 'firebase/auth'
+
 function Home() {
 
     const highlights = [
@@ -33,11 +36,15 @@ function Home() {
     const handleLogOut = async () => {
         console.log("logout click")
         try {
-            await axios.get(`${serverUrl}/api/auth/logout`, { withCredentials: true })
-            dispatch(setUserData(null))
-            setOpenProfile(false)
+            await signOut(auth);
+            localStorage.removeItem("token");
+            await axios.get(`${serverUrl}/api/auth/logout`, { withCredentials: true });
         } catch (error) {
-            console.log(error)
+            console.error("Logout error:", error);
+        } finally {
+            localStorage.removeItem("token");
+            dispatch(setUserData(null));
+            setOpenProfile(false);
         }
     }
 
